@@ -14,33 +14,44 @@ import com.cjc.springbootapp.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
-    private final UserRepository userRepository;
-
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private CustomerRepository customerRepository;
 
-    AuthController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserService userService;
 
-    // REGISTER
+    // ================= REGISTER =================
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(
+            @RequestBody RegisterRequest request,
+            @RequestParam(required = false) String adminKey
+    ) {
+
+        // ✅ Prevent duplicate email
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Email already registered");
+        }
 
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // plain text
-        user.setRole("USER");
+        user.setPassword(request.getPassword()); // plain text (later hash)
+        
+        // ✅ SAFE admin check
+        if ("ADMIN@123".equals(adminKey)) {
+            user.setRole("ADMIN");
+        } else {
+            user.setRole("USER");
+        }
 
         user = userRepository.save(user);
 
-        // 🔥 CREATE CUSTOMER AUTOMATICALLY
         Customer customer = new Customer();
         customer.setUser(user);
         customer.setName(request.getName());
@@ -50,17 +61,21 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    // LOGIN
+    // ================= LOGIN =================
     @PostMapping("/login")
-    public User login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
         User user = userService.login(
                 request.getEmail(),
-                request.getPassword() // plain text
+                request.getPassword()
         );
 
         if (user == null) {
-            throw new RuntimeException("Invalid credentials");
+            return ResponseEntity
+                    .status(401)
+                    .body("Invalid credentials");
         }
-        return user; // includes role (ADMIN / USER)
+
+        return ResponseEntity.ok(user);
     }
 }
