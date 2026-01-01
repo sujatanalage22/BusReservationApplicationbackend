@@ -10,7 +10,7 @@ import com.cjc.springbootapp.service.RouteService;
 
 @RestController
 @RequestMapping("/api/routes")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class RouteController {
 
     @Autowired

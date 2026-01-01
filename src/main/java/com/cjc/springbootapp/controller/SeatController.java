@@ -11,7 +11,7 @@ import com.cjc.springbootapp.service.SeatService;
 
 @RestController
 @RequestMapping("/api/seats")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class SeatController {
 
     @Autowired

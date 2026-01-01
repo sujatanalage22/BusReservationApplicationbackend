@@ -13,7 +13,7 @@ import com.cjc.springbootapp.service.BookingService;
 
 @RestController
 @RequestMapping("/api/bookings")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class BookingController {
 
     @Autowired

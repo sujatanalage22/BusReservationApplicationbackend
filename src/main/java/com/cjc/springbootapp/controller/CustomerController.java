@@ -16,7 +16,7 @@ import com.cjc.springbootapp.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/customers")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class CustomerController {
 
     @Autowired

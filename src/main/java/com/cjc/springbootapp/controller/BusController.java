@@ -8,7 +8,7 @@ import com.cjc.springbootapp.service.BusService;
 
 @RestController
 @RequestMapping("/api/buses")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class BusController {
 
     @Autowired
